@@ -15,8 +15,8 @@ by design; the signal is the arm-vs-arm delta — and that delta is bought at
 thin-FFN-like training time, in a 16 GB envelope (see
 [Results](#results) and [What Naylis buys you](#what-naylis-buys-you)).
 
-Checkpoints & training curves: [naylis_mom_fixed](https://huggingface.co/datasets/TheRealSkyline/naylis_mom_fixed) ·
-[baseline checkpoints](https://huggingface.co/datasets/TheRealSkyline/naylis_ablation_300M)
+Checkpoints & training curves (all four arms in one repo):
+[naylis_ablation_300M](https://huggingface.co/datasets/TheRealSkyline/naylis_ablation_300M)
 
 > **How these numbers were produced and verified** — the controls, the
 > pre-registered predictions, the bit-exact router checks, the platform
@@ -299,16 +299,18 @@ METHODOLOGY.md        how the results were produced and verified
 
 ## Checkpoints, curves, data
 
-- Naylis causal reference run: `TheRealSkyline/naylis_mom_fixed` —
-  `naylis_mom_causal_seed257/` (`model_final/`, `checkpoint/`, `curves/`).
-- Dense controls (wide / thin) and full trainer states:
-  `TheRealSkyline/naylis_ablation_300M` (HF dataset).
+- All four arms of the study live in one HF dataset:
+  `TheRealSkyline/naylis_ablation_300M` — per-arm folders
+  `naylis_mom_causal/` (the reference run), `vanilla/`, `vanilla_thin_ffn/`
+  and `DEPRECATED_naylis_graph_moe_leaky/` (leaky-router arm, numbers
+  invalidated — see its card). Weights, full trainer states and curves
+  for each.
 - Training stream: `TheRealSkyline/5B_Tokens_Cosmopedia-V2`
   (`pretrain_data_5B.bin`, one epoch).
 - Tokenizer: `HuggingFaceTB/cosmo2-tokenizer` (49,152 vocab).
 
 The figures in this repo are rebuilt from those trainer states (token axis,
-smoothing, annotations); the raw per-step curves are on the HF repos.
+smoothing, annotations); the raw per-step curves are on the HF repo.
 
 ## Roadmap — 1B params on 100B tokens
 

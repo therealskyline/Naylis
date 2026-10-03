@@ -265,7 +265,7 @@ export HF_TOKEN=hf_...
 
 # evaluate / benchmark checkpoints from the Hub (bf16, eager MoM path)
 python evaluate.py                        # default task suite
-python evaluate.py --models llama-300m    # one arm
+python evaluate.py --models naylis_mom_causal    # one arm
 python evaluate.py --skip-download        # use local ./model_<name> dirs
 ```
 

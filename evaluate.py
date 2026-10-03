@@ -10,7 +10,7 @@ time; the MoM layer runs its eager path) and runs the zero-shot suite
 table and a JSON file; a task that fails or is absent is reported as
 N/A instead of aborting the other arms.
 
-Usage: python evaluate.py [--models llama-300m naylis-mom-300m ...]
+Usage: python evaluate.py [--models naylis_mom_causal vanilla vanilla_thin_ffn ...]
                           [--device auto|cuda|cpu|xla] [--skip-download]
 """
 import argparse
@@ -32,7 +32,10 @@ logger = logging.getLogger(__name__)
 DEFAULT_REPO_ID = "TheRealSkyline/naylis_ablation_300M"
 DEFAULT_REPO_TYPE = "dataset"
 DEFAULT_TOKENIZER = "HuggingFaceTB/cosmo2-tokenizer"
-DEFAULT_MODELS = ["llama-300m", "llama-300m-thin", "naylis-mom-300m"]
+# Folder keys of the consolidated HF dataset (TheRealSkyline/naylis_ablation_300M).
+# The deprecated leaky arm (DEPRECATED_naylis_graph_moe_leaky) is excluded on
+# purpose: its numbers are invalidated and not faithfully evaluated here.
+DEFAULT_MODELS = ["naylis_mom_causal", "vanilla", "vanilla_thin_ffn"]
 DEFAULT_SEED = 257
 
 TASKS: dict[str, int] = {
@@ -429,7 +432,7 @@ def save_results(all_results: dict[str, Any], output_path: str) -> None:
 def build_arg_parser() -> argparse.ArgumentParser:
     """CLI: models, repo, tasks/shots, batch size, device, output."""
     parser = argparse.ArgumentParser(description="Benchmark Naylis checkpoints with lm-evaluation-harness")
-    parser.add_argument("--models", nargs="+", default=DEFAULT_MODELS, help="Model names to benchmark (repo folder keys, e.g. llama-300m naylis-mom-300m)")
+    parser.add_argument("--models", nargs="+", default=DEFAULT_MODELS, help="Model names to benchmark (repo folder keys, e.g. naylis_mom_causal vanilla)")
     parser.add_argument("--repo_id", type=str, default=DEFAULT_REPO_ID, help="Hugging Face repo hosting the checkpoints")
     parser.add_argument("--repo_type", type=str, default=DEFAULT_REPO_TYPE, help="Repo type (dataset or model)")
     parser.add_argument("--tasks", nargs="+", default=list(TASKS), help="lm-eval task names to run")

@@ -195,6 +195,20 @@ Transparency obligations incurred during the project, all resolved:
   against Llama-3 8B: reproduces ~32 real days), ~10 days on v5e-32, ~3 days
   on v5e-128. Corrected everywhere, including this document.
 - **Platform confound disclosed** (above) rather than averaged away.
+- **BinDataset stride.** The `(seq_len+1)` row stride with internal-shift
+  labels served 1024 of every 1025 tokens (~0.1% of the stream never read);
+  fixed to a `seq_len` stride. Published checkpoints and evals are
+  unaffected — they trained and scored on the stream as then served; future
+  runs read the full stream.
+- **Redundant `post_init`.** Model construction ran five init passes — the
+  standard `super()` trees, then the Naylis tree drawn twice. The duplicate
+  Naylis pass was removed (the standard HF double-construction is left
+  untouched). Build-time only: fresh-run init draws shift, published
+  checkpoints unaffected.
+- **Eval provenance.** The benchmark ledger, reconstructed from the Colab
+  log, had no harness version captured; `lm_eval_version` is now recorded
+  as `0.4.13` (last stable PyPI release at the run date) and pinned in
+  `requirements.txt` so re-runs match.
 
 ## Roadmap: 1B params, 100B tokens
 

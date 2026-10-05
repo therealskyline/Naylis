@@ -267,10 +267,10 @@ def build_model(variant: str, arch: dict, naylis: dict, vocab_size: int, device,
 
 
 class BinDataset(torch.utils.data.Dataset):
-    """Memory-mapped uint16 token bin cut into (seq_len + 1) rows.
+    """Memory-mapped uint16 token bin cut into seq_len rows.
 
-    Row i spans tokens [i*(S+1), (i+1)*(S+1)); input_ids and labels carry
-    the same S tokens (the shift happens inside the loss). ``__getitems__``
+    Row i spans tokens [i*S, (i+1)*S); input_ids and labels carry the
+    same S tokens (the shift happens inside the loss). ``__getitems__``
     serves whole index batches so the dataloader gathers once per step.
     """
 
@@ -279,13 +279,13 @@ class BinDataset(torch.utils.data.Dataset):
         self.tokens = np.memmap(file_path, dtype=np.uint16, mode="r")
         if total_tokens_to_read:
             self.tokens = self.tokens[:total_tokens_to_read]
-        self.n_examples = len(self.tokens) // (seq_len + 1)
+        self.n_examples = len(self.tokens) // seq_len
 
     def __len__(self):
         return self.n_examples
 
     def __getitems__(self, indices):
-        starts = np.asarray(indices, dtype=np.int64) * (self.seq_len + 1)
+        starts = np.asarray(indices, dtype=np.int64) * self.seq_len
         rows = starts[:, None] + np.arange(self.seq_len, dtype=np.int64)
         input_ids = torch.from_numpy(self.tokens[rows].astype(np.int64))
         return {"input_ids": input_ids, "labels": input_ids}

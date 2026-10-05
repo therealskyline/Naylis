@@ -329,7 +329,7 @@ MIT — © 2026 Silyan Larak. If this repo is useful to you:
   title  = {Naylis: a Llama with a routed memory bank and a causal router},
   author = {Larak, Silyan},
   year   = {2026},
-  url    = {https://github.com/<you>/naylis},
+  url    = {https://github.com/therealskyline/naylis},
   note   = {300M params, 5B tokens, causal routed memory bank}
 }
 ```

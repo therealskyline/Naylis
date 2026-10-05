@@ -20,7 +20,7 @@
     "seed": 257,
     "limit": null,
     "tokenizer": "HuggingFaceTB/cosmo2-tokenizer",
-    "lm_eval_version": null,
+    "lm_eval_version": "0.4.13",
     "checkpoints": {
       "vanilla": "TheRealSkyline/naylis_ablation_300M (dataset) → {vanilla}/ (cache HF local, chemin non visible dans le log)",
       "vanilla_thin_ffn": "TheRealSkyline/naylis_ablation_300M (dataset) → {vanilla_thin_ffn}/ (cache HF local, chemin non visible dans le log)",

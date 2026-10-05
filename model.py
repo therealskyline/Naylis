@@ -39,8 +39,9 @@ elsewhere — so the softmax normalises over exactly the ``top_blocks *
 block_size`` active slots of each token. The bias is differentiable end
 to end (one-hot x log-gates), so the LM gradient reaches the router
 through the gates. Cost: the MoM attention spans mem_size slots instead
-of the gathered subset (~+10% total FLOPs) — the price of strict
-per-token causality, measured in the reported MFU.
+of the gathered subset — ≈ +58% per-token MACs over the thin trunk and
+≈ −7% under the wide control (per-layer MAC recount in METHODOLOGY.md) —
+the price of strict per-token causality, measured in the reported MFU.
 
 Numerics: training is bf16-only (fp32 master weights, no GradScaler);
 fp8 (Transformer Engine or torchao) is an opt-in [precision] policy that
@@ -387,7 +388,10 @@ class NaylisLlamaModel(LlamaModel):
             for i in range(config.num_hidden_layers)
         ])
 
-        self.post_init()
+        # No post_init() here: the outer NaylisLlamaForCausalLM.post_init()
+        # initialises every registered submodule (incl. these layers and
+        # M_blocks' in-module Linears); calling it here as well just re-drew
+        # every weight a second time at build.
 
     def forward(self, input_ids=None, attention_mask=None, position_ids=None, inputs_embeds=None, **kwargs):
         if inputs_embeds is None:
